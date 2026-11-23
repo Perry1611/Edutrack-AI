@@ -1,0 +1,11 @@
+{
+  "name": "edutrack-fullstack",
+  "version": "1.0.0",
+  "description": "EduTrack - Student Performance Predictor & What-If Simulator",
+  "scripts": {
+    "start:backend": "cd backend && node server.js",
+    "start:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build:frontend": "cd frontend && npm run build"
+  }
+}
