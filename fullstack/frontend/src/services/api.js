@@ -65,6 +65,17 @@ export async function getLatestAssessment(userId) {
   return json.assessment;
 }
 
+export async function getAssessmentHistory(userId) {
+  try {
+    const res = await fetch(`${BASE_URL}/assessments/history/${userId}`);
+    const json = await res.json();
+    return json.assessments || [];
+  } catch (err) {
+    console.error('Failed to get assessment history:', err);
+    return [];
+  }
+}
+
 export async function getDatasetSummary() {
   const res = await fetch(`${BASE_URL}/dataset/summary`);
   return await res.json();

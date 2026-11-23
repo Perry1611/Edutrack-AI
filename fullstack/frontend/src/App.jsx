@@ -4,7 +4,8 @@ import LandingPage from './components/LandingPage';
 import AuthModal from './components/AuthModal';
 import AssessmentWizard from './components/AssessmentWizard';
 import Dashboard from './components/Dashboard';
-import { getLatestAssessment } from './services/api';
+import RetakeConfirmModal from './components/RetakeConfirmModal';
+import { getLatestAssessment, getAssessmentHistory } from './services/api';
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -19,6 +20,8 @@ export default function App() {
   const [activePage, setActivePage] = useState('landing'); // 'landing' | 'assessment' | 'dashboard'
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login'); // 'login' | 'register'
+  const [retakeModalOpen, setRetakeModalOpen] = useState(false);
+  const [isFreshAssessment, setIsFreshAssessment] = useState(false);
 
   const [assessmentResult, setAssessmentResult] = useState(() => {
     try {
@@ -35,6 +38,15 @@ export default function App() {
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
+    }
+  });
+
+  const [assessmentHistory, setAssessmentHistory] = useState(() => {
+    try {
+      const saved = localStorage.getItem('edutrack_history');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
   });
 
@@ -84,6 +96,55 @@ export default function App() {
     }
   }, [baselineInput]);
 
+  // Load real user assessment history from API / Database
+  useEffect(() => {
+    let active = true;
+
+    async function loadRealUserHistory() {
+      const activeUserId = user?.id || (user ? user.email : null);
+      if (!activeUserId) {
+        // Guest mode or not logged in: check local storage cache
+        const localSaved = localStorage.getItem('edutrack_history_guest');
+        if (active) {
+          setAssessmentHistory(localSaved ? JSON.parse(localSaved) : []);
+        }
+        return;
+      }
+
+      try {
+        const rawHistory = await getAssessmentHistory(activeUserId);
+        if (active && rawHistory && rawHistory.length > 0) {
+          const formatted = rawHistory.map(r => {
+            const dateObj = new Date(r.created_at);
+            return {
+              id: r.id,
+              date: dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }),
+              fullDate: dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+              score: Math.round(Number(r.predicted_score || 0)),
+              category: r.category || 'Sedang',
+              timestamp: dateObj.getTime()
+            };
+          });
+          setAssessmentHistory(formatted);
+          localStorage.setItem(`edutrack_history_${activeUserId}`, JSON.stringify(formatted));
+        } else if (active) {
+          // If no history on remote yet, check user's local cache or start empty
+          const localSaved = localStorage.getItem(`edutrack_history_${activeUserId}`);
+          setAssessmentHistory(localSaved ? JSON.parse(localSaved) : []);
+        }
+      } catch (err) {
+        console.warn('Could not fetch remote history, using local cache:', err);
+        const localSaved = localStorage.getItem(`edutrack_history_${activeUserId}`);
+        if (active) {
+          setAssessmentHistory(localSaved ? JSON.parse(localSaved) : []);
+        }
+      }
+    }
+
+    loadRealUserHistory();
+    return () => { active = false; };
+  }, [user]);
+
   function handleOpenAuth(mode = 'login') {
     setAuthModalMode(mode);
     setAuthModalOpen(true);
@@ -91,7 +152,6 @@ export default function App() {
 
   function handleAuthSuccess(authenticatedUser) {
     setUser(authenticatedUser);
-    // If user has not completed assessment, take them to assessment; otherwise if they already have one, dashboard or assessment
     if (!assessmentResult) {
       setActivePage('assessment');
     } else {
@@ -101,7 +161,12 @@ export default function App() {
 
   function handleLogout() {
     setUser(null);
+    setAssessmentResult(null);
+    setBaselineInput(null);
+    setAssessmentHistory([]);
     localStorage.removeItem('edutrack_user');
+    localStorage.removeItem('edutrack_result');
+    localStorage.removeItem('edutrack_input');
     setActivePage('landing');
   }
 
@@ -116,7 +181,43 @@ export default function App() {
   function handleAssessmentComplete(result, inputData) {
     setAssessmentResult(result);
     setBaselineInput(inputData);
+    setIsFreshAssessment(false);
+
+    // Format real date of current assessment
+    const today = new Date();
+    const todayDateStr = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+
+    const newEntry = {
+      id: Date.now().toString(),
+      date: todayDateStr,
+      fullDate: today.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+      score: Math.round(result.predictedScore || result.score || 0),
+      category: result.category || 'Sedang',
+      timestamp: today.getTime()
+    };
+
+    const activeUserId = user?.id || (user ? user.email : 'guest');
+    setAssessmentHistory(prev => {
+      const updated = [...prev, newEntry];
+      localStorage.setItem(`edutrack_history_${activeUserId}`, JSON.stringify(updated));
+      return updated;
+    });
+
     setActivePage('dashboard');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleConfirmRetake() {
+    // 1. Clear old assessment result & input
+    setAssessmentResult(null);
+    setBaselineInput(null);
+    localStorage.removeItem('edutrack_result');
+    localStorage.removeItem('edutrack_input');
+
+    // 2. Set fresh assessment flag so form begins empty
+    setIsFreshAssessment(true);
+    setRetakeModalOpen(false);
+    setActivePage('assessment');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -147,6 +248,7 @@ export default function App() {
           <AssessmentWizard
             user={user}
             onComplete={handleAssessmentComplete}
+            isFreshRetake={isFreshAssessment}
           />
         )}
 
@@ -155,7 +257,9 @@ export default function App() {
             user={user}
             assessmentResult={assessmentResult}
             baselineInput={baselineInput}
-            onRetake={() => setActivePage('assessment')}
+            onRetake={() => setRetakeModalOpen(true)}
+            onOpenRetakeModal={() => setRetakeModalOpen(true)}
+            assessmentHistory={assessmentHistory}
           />
         )}
       </main>
@@ -167,7 +271,7 @@ export default function App() {
             EduTrack AI • MPTI Capstone Project
           </p>
           <p>
-            Memprediksi Kinerja Belajar Siswa Berbasis Dataset Empiris & Simulasi Interaktif What-If
+            Platform Cerdas Evaluasi dan Simulasi Peningkatan Kinerja Belajar Siswa
           </p>
         </div>
       </footer>
@@ -178,6 +282,13 @@ export default function App() {
         initialMode={authModalMode}
         onClose={() => setAuthModalOpen(false)}
         onAuthSuccess={handleAuthSuccess}
+      />
+
+      {/* Confirmation Retake Modal */}
+      <RetakeConfirmModal
+        isOpen={retakeModalOpen}
+        onClose={() => setRetakeModalOpen(false)}
+        onConfirm={handleConfirmRetake}
       />
     </div>
   );

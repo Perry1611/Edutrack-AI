@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   CheckCircle2, ArrowRight, ArrowLeft, Sparkles, BookOpen, 
   Home, Smile, Loader2
 } from 'lucide-react';
-import { QUESTIONS, QUESTION_CATEGORIES, INITIAL_FORM_VALUES } from '../data/questions';
+import { QUESTIONS, QUESTION_CATEGORIES, INITIAL_FORM_VALUES, EMPTY_FORM_VALUES } from '../data/questions';
 import { predictPerformance, saveAssessment } from '../services/api';
 
-export default function AssessmentWizard({ user, onComplete }) {
+export default function AssessmentWizard({ user, onComplete, isFreshRetake = false }) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState(INITIAL_FORM_VALUES);
+  const [formData, setFormData] = useState(() => isFreshRetake ? EMPTY_FORM_VALUES : INITIAL_FORM_VALUES);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  // If isFreshRetake changes to true, reset state to completely empty form
+  useEffect(() => {
+    if (isFreshRetake) {
+      setFormData(EMPTY_FORM_VALUES);
+      setCurrentStep(0);
+    }
+  }, [isFreshRetake]);
 
   const currentCategory = QUESTION_CATEGORIES[currentStep];
   const questionsInStep = QUESTIONS.filter(q => q.category === currentCategory.id);
 
   function handleInputChange(key, value) {
     setFormData(prev => ({ ...prev, [key]: value }));
+    setErrorMsg('');
   }
 
   function handleNext() {
+    const unanswered = questionsInStep.filter(q => (q.type === 'radio' || q.type === 'select') && (!formData[q.key] || formData[q.key] === ''));
+    if (unanswered.length > 0) {
+      setErrorMsg(`Harap lengkapi semua pilihan jawaban pada bagian ini sebelum lanjut.`);
+      return;
+    }
+    setErrorMsg('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (currentStep < QUESTION_CATEGORIES.length - 1) {
       setCurrentStep(prev => prev + 1);
@@ -27,6 +42,7 @@ export default function AssessmentWizard({ user, onComplete }) {
   }
 
   function handleBack() {
+    setErrorMsg('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (currentStep > 0) {
       setCurrentStep(prev => prev - 1);
@@ -34,6 +50,11 @@ export default function AssessmentWizard({ user, onComplete }) {
   }
 
   async function handleSubmit() {
+    const unanswered = questionsInStep.filter(q => (q.type === 'radio' || q.type === 'select') && (!formData[q.key] || formData[q.key] === ''));
+    if (unanswered.length > 0) {
+      setErrorMsg(`Harap lengkapi semua pilihan jawaban pada bagian ini.`);
+      return;
+    }
     setErrorMsg('');
     setLoading(true);
 
@@ -55,13 +76,13 @@ export default function AssessmentWizard({ user, onComplete }) {
       <div className="mb-8 text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-bold">
           <Sparkles className="w-3.5 h-3.5" />
-          Asesmen Variabel Pembelajaran Siswa
+          Asesmen Kebiasaan Belajar Siswa
         </div>
         <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
           Ketahui Estimasi Skor Belajar & Rekomendasimu
         </h2>
         <p className="text-slate-600 dark:text-slate-300 text-sm max-w-xl mx-auto">
-          Isi 19 pertanyaan berikut sesuai kebiasaan dan kondisi belajarmu sehari-hari. Model AI kami akan menganalisis profilmu secara instan.
+          Isi 19 pertanyaan berikut sesuai kebiasaan dan kondisi belajarmu sehari-hari untuk mendapatkan analisis instan.
         </p>
 
         {/* Progress Bar */}

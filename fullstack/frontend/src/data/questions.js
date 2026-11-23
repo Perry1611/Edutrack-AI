@@ -262,3 +262,16 @@ export const INITIAL_FORM_VALUES = QUESTIONS.reduce((acc, q) => {
   acc[q.key] = q.defaultValue;
   return acc;
 }, {});
+
+export const EMPTY_FORM_VALUES = QUESTIONS.reduce((acc, q) => {
+  if (q.type === 'radio' || q.type === 'select') {
+    acc[q.key] = ''; // Kosong/belum dipilih
+  } else if (q.type === 'counter') {
+    acc[q.key] = q.min || 0;
+  } else if (q.type === 'slider') {
+    acc[q.key] = q.min;
+  } else {
+    acc[q.key] = '';
+  }
+  return acc;
+}, {});

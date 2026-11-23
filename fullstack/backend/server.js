@@ -286,6 +286,37 @@ app.get('/api/assessments/latest/:userId', async (req, res) => {
 });
 
 /**
+ * ASSESSMENTS: Get User Assessment History
+ */
+app.get('/api/assessments/history/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    if (isConfigured && supabase) {
+      const { data, error } = await supabase
+        .from('assessments')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true });
+
+      if (!error && data) {
+        return res.json({ success: true, assessments: data });
+      }
+    }
+
+    // Fallback to memoryStore
+    const userAssessments = memoryStore.assessments
+      .filter(a => a.user_id === userId)
+      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+    res.json({ success: true, assessments: userAssessments });
+  } catch (err) {
+    console.error('Get assessment history error:', err);
+    res.status(500).json({ error: 'Gagal mengambil riwayat asesmen.' });
+  }
+});
+
+/**
  * DATASET: Summary & Insights
  */
 app.get('/api/dataset/summary', (req, res) => {

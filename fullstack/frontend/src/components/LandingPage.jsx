@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   ArrowRight, Sparkles, Sliders, TrendingUp, CheckCircle2, 
-  BrainCircuit, Award
+  ClipboardCheck, Award
 } from 'lucide-react';
 
 export default function LandingPage({ onStartAssessment, onOpenAuth, user }) {
@@ -19,7 +19,7 @@ export default function LandingPage({ onStartAssessment, onOpenAuth, user }) {
             <div className="lg:col-span-7 text-center lg:text-left space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-bold tracking-wide uppercase shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                Inovasi Capstone MPTI • AI Student Predictor
+                Platform Evaluasi Belajar Cerdas
               </div>
 
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
@@ -27,7 +27,7 @@ export default function LandingPage({ onStartAssessment, onOpenAuth, user }) {
               </h1>
 
               <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Berdasarkan analisis empiris <strong>6.600+ data performa siswa</strong>. Jawab kuis singkat untuk memprediksi skor ujianmu, temukan <strong>3 faktor prioritas</strong> yang paling perlu ditingkatkan, dan simulasikan potensimu di tab <strong>What-If</strong>!
+                Berdasarkan analisis empiris <strong>6000+ data performa siswa</strong>. Jawab kuis singkat untuk memprediksi skor ujianmu, temukan <strong>3 faktor prioritas</strong> yang paling perlu ditingkatkan, dan simulasikan potensimu di tab <strong>What-If</strong>!
               </p>
 
               {/* Action Buttons */}
@@ -53,7 +53,7 @@ export default function LandingPage({ onStartAssessment, onOpenAuth, user }) {
               {/* Trust badges */}
               <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Model Regresi & Deep Learning
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Analisis Cerdas & Teruji
                 </span>
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Langsung Pakai Tanpa Ribet
@@ -101,7 +101,7 @@ export default function LandingPage({ onStartAssessment, onOpenAuth, user }) {
                 {/* Simulated variables showcase */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    <span>3 Variabel Prioritas yang Ditingkatkan:</span>
+                    <span>3 Faktor Utama yang Dioptimalkan:</span>
                   </div>
 
                   <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/70 border border-slate-200/60 dark:border-slate-700 flex items-center justify-between text-xs">
@@ -147,42 +147,99 @@ export default function LandingPage({ onStartAssessment, onOpenAuth, user }) {
               Solusi Berbasis Data untuk Mendorong Prestasi Siswa
             </h2>
             <p className="text-slate-600 dark:text-slate-300">
-              Dibangun dari dataset analitik performa siswa yang komprehensif, menghubungkan variabel dependen performa dengan tindakan nyata.
+              Dibangun dari riset pola belajar siswa yang komprehensif, menghubungkan kebiasaan harian dengan hasil belajar nyata.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-bold">
-                <BrainCircuit className="w-6 h-6" />
+            <div 
+              onClick={onStartAssessment}
+              className="group relative text-left p-6 sm:p-7 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-950/40 hover:-translate-y-2 active:scale-[0.98] transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden"
+            >
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-100 dark:border-indigo-800/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                    <ClipboardCheck className="w-6 h-6" />
+                  </div>
+                  <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-600 dark:group-hover:bg-indigo-950/60 dark:group-hover:text-indigo-300 transition-colors">
+                    19 Faktor
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    Asesmen Kinerja Cerdas
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-1.5">
+                    Jawab kuis ramah siswa mencakup 19 faktor: jam belajar, kehadiran, akses sumber belajar, waktu tidur, hingga motivasi pribadi.
+                  </p>
+                </div>
               </div>
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">1. Asesmen Kinerja Cerdas</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Jawab kuis ramah siswa mencakup 19 faktor: jam belajar, kehadiran, akses sumber belajar, waktu tidur, hingga motivasi pribadi.
-              </p>
+              <div className="pt-4 flex items-center text-xs font-bold text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 gap-1.5 transition-all">
+                <span>Mulai Asesmen</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </div>
             </div>
 
             {/* Feature 2 */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-violet-100 dark:bg-violet-900/60 text-violet-700 dark:text-violet-300 flex items-center justify-center font-bold">
-                <Award className="w-6 h-6" />
+            <div 
+              onClick={onStartAssessment}
+              className="group relative text-left p-6 sm:p-7 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 hover:border-violet-400 dark:hover:border-violet-500 hover:shadow-xl hover:shadow-violet-500/10 dark:hover:shadow-violet-950/40 hover:-translate-y-2 active:scale-[0.98] transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden"
+            >
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-950/70 border border-violet-100 dark:border-violet-800/60 text-violet-600 dark:text-violet-400 flex items-center justify-center font-bold shadow-sm group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300">
+                    <Award className="w-6 h-6" />
+                  </div>
+                  <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 group-hover:bg-violet-50 group-hover:text-violet-600 dark:group-hover:bg-violet-950/60 dark:group-hover:text-violet-300 transition-colors">
+                    Personal
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                    Rekomendasi Prioritas Utama
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-1.5">
+                    Sistem secara otomatis mendeteksi 3 faktor paling berdampak untuk ditingkatkan sesuai profil unik setiap siswa.
+                  </p>
+                </div>
               </div>
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">2. 3 Rekomendasi Prioritas</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Sistem secara otomatis mendeteksi 3 variabel yang paling berdampak besar untuk ditingkatkan sesuai profil unik setiap siswa.
-              </p>
+              <div className="pt-4 flex items-center text-xs font-bold text-violet-600 dark:text-violet-400 group-hover:text-violet-700 dark:group-hover:text-violet-300 gap-1.5 transition-all">
+                <span>Lihat Rekomendasi</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </div>
             </div>
 
             {/* Feature 3 */}
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold">
-                <Sliders className="w-6 h-6" />
+            <div 
+              onClick={onStartAssessment}
+              className="group relative text-left p-6 sm:p-7 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-950/40 hover:-translate-y-2 active:scale-[0.98] transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden"
+            >
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-100 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold shadow-sm group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+                    <Sliders className="w-6 h-6" />
+                  </div>
+                  <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 group-hover:bg-emerald-50 group-hover:text-emerald-600 dark:group-hover:bg-emerald-950/60 dark:group-hover:text-emerald-300 transition-colors">
+                    Real-Time
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    Simulasi Interaktif "What-If"
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-1.5">
+                    Geser slider kebiasaan untuk melihat secara langsung bagaimana perubahan aktivitas belajar mendongkrak prediksi nilai ujianmu!
+                  </p>
+                </div>
               </div>
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">3. Simulasi Interaktif "What-If"</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Geser slider variabel untuk melihat secara langsung bagaimana perubahan kebiasaan belajar mendongkrak prediksi nilai ujianmu!
-              </p>
+              <div className="pt-4 flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 gap-1.5 transition-all">
+                <span>Coba Simulasi</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </div>
             </div>
           </div>
         </div>
@@ -195,30 +252,30 @@ export default function LandingPage({ onStartAssessment, onOpenAuth, user }) {
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-8 space-y-4">
                 <span className="text-xs font-bold uppercase tracking-wider text-indigo-300 px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800">
-                  Transparansi Data Scientist
+                  Basis Riset Terpercaya
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
-                  Didukung Analisis 6.654 Data Riwayat Siswa
+                  Didukung Analisis 6000+ Data Riwayat Siswa
                 </h3>
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
-                  Model dilatih untuk memprediksi variabel dependen (Exam Score & Kategori Prestasi) dengan merekayasa 5 fitur turunan seperti rasio tidur-belajar, efisiensi belajar, dan skor kesiapan akademik.
+                  Menganalisis pola kesiapan ujian dan potensi prestasi berdasarkan keseimbangan waktu belajar, kualitas istirahat, serta efisiensi belajar harian siswa.
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
                   <div>
-                    <div className="text-2xl font-bold text-indigo-400">6.654</div>
+                    <div className="text-2xl font-bold text-indigo-400">6000+</div>
                     <div className="text-xs text-slate-400">Sampel Siswa</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-indigo-400">19 Fitur</div>
-                    <div className="text-xs text-slate-400">Variabel Asli</div>
+                    <div className="text-2xl font-bold text-indigo-400">19 Faktor</div>
+                    <div className="text-xs text-slate-400">Indikator Belajar</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-indigo-400">5 Fitur</div>
-                    <div className="text-xs text-slate-400">Rekayasa AI</div>
+                    <div className="text-2xl font-bold text-indigo-400">Pola Cerdas</div>
+                    <div className="text-xs text-slate-400">Analisis Terpadu</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-indigo-400">Instant</div>
-                    <div className="text-xs text-slate-400">Simulasi What-If</div>
+                    <div className="text-xs text-slate-400">Simulasi Nilai</div>
                   </div>
                 </div>
               </div>

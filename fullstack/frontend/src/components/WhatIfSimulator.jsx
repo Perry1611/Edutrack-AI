@@ -6,7 +6,12 @@ import {
 import confetti from 'canvas-confetti';
 import { simulateWhatIf } from '../services/api';
 
-export default function WhatIfSimulator({ baselineInput, baselineResult, onApplyTarget }) {
+export default function WhatIfSimulator({ 
+  baselineInput, 
+  baselineResult, 
+  onApplyTarget,
+  onOpenRetakeModal
+}) {
   const recommendations = baselineResult?.topRecommendations || [];
   
   // Initialize simulated modifications with the suggested target values
@@ -84,13 +89,13 @@ export default function WhatIfSimulator({ baselineInput, baselineResult, onApply
           <div className="space-y-2 max-w-xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider">
               <Zap className="w-3.5 h-3.5 text-amber-300" />
-              Interactive "What-If" AI Simulation Sandbox
+              Simulasi Nilai Interaktif (What-If)
             </div>
             <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-white">
               Simulasi Peningkatan Kinerja Belajar
             </h2>
             <p className="text-indigo-100 text-sm leading-relaxed">
-              Model memprediksi bahwa dengan memperbaiki <strong>3 variabel prioritas</strong> di bawah ini, skor belajarmu dapat melompat lebih tinggi. Geser slider untuk melihat proyeksi nilai barumu secara langsung!
+              Dengan memperbaiki <strong>3 faktor utama</strong> di bawah ini, estimasi nilai belajarmu dapat meningkat optimal. Geser slider untuk melihat proyeksi nilai barumu secara langsung!
             </p>
           </div>
 
@@ -119,15 +124,15 @@ export default function WhatIfSimulator({ baselineInput, baselineResult, onApply
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
-                    3 Variabel Prioritas Rekomendasi
+                    3 Faktor Utama yang Disarankan
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Geser nilai untuk mengamati pengaruhnya terhadap estimasi performamu
+                    Geser nilai untuk mengamati pengaruhnya terhadap estimasi nilaimu
                   </p>
                 </div>
               </div>
               <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800">
-                AI Focused
+                Fokus Utama
               </span>
             </div>
 
@@ -210,7 +215,7 @@ export default function WhatIfSimulator({ baselineInput, baselineResult, onApply
                 onClick={() => setShowAdvanced(!showAdvanced)}
                 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center gap-1.5"
               >
-                <span>{showAdvanced ? 'Tutup Variabel Tambahan' : '+ Coba Simulasikan Variabel Lainnya (Kehadiran, Motivasi, Olahraga)'}</span>
+                <span>{showAdvanced ? 'Tutup Faktor Tambahan' : '+ Coba Simulasikan Faktor Lainnya (Kehadiran, Motivasi, Olahraga)'}</span>
               </button>
 
               {showAdvanced && (
@@ -321,18 +326,30 @@ export default function WhatIfSimulator({ baselineInput, baselineResult, onApply
             </div>
 
             {/* Action CTA: Apply this target */}
-            <button
-              type="button"
-              onClick={() => {
-                if (onApplyTarget) {
-                  onApplyTarget(modifications, currentSimScore);
-                }
-              }}
-              className="w-full py-3.5 px-4 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition-all shadow-md shadow-indigo-200 dark:shadow-indigo-950 flex items-center justify-center gap-2 text-sm"
-            >
-              <Target className="w-4 h-4" />
-              <span>Jadikan Ini Target Belajar Saya!</span>
-            </button>
+            <div className="space-y-3 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  if (onApplyTarget) {
+                    onApplyTarget(modifications, currentSimScore);
+                  }
+                }}
+                className="w-full py-3.5 px-4 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition-all shadow-md shadow-indigo-200 dark:shadow-indigo-950 flex items-center justify-center gap-2 text-sm"
+              >
+                <Target className="w-4 h-4" />
+                <span>Jadikan Ini Target Belajar Saya!</span>
+              </button>
+
+              {/* Asesmen Ulang Button with confirmation modal trigger */}
+              <button
+                type="button"
+                onClick={onOpenRetakeModal}
+                className="w-full py-3 px-4 rounded-xl font-bold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 border border-slate-300 dark:border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm shadow-sm"
+              >
+                <RotateCcw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                <span>Asesmen Ulang</span>
+              </button>
+            </div>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GraduationCap, LogOut, Sparkles, LayoutDashboard, Compass, Sun, Moon, Menu, X } from 'lucide-react';
+import { GraduationCap, LogOut, Sparkles, LayoutDashboard, ClipboardCheck, Sun, Moon, Menu, X } from 'lucide-react';
 
 export default function Navbar({ activePage, setActivePage, user, onOpenAuth, onLogout, theme, onToggleTheme }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,7 +52,7 @@ export default function Navbar({ activePage, setActivePage, user, onOpenAuth, on
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            <Compass className="w-4 h-4 text-indigo-500" />
+            <ClipboardCheck className="w-4 h-4 text-indigo-500" />
             Asesmen Belajar
           </button>
           <button
@@ -170,7 +170,7 @@ export default function Navbar({ activePage, setActivePage, user, onOpenAuth, on
                   : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
-              <Compass className="w-4 h-4 text-indigo-500" />
+              <ClipboardCheck className="w-4 h-4 text-indigo-500" />
               Asesmen Belajar
             </button>
             <button

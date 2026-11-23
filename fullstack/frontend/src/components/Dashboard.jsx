@@ -4,8 +4,16 @@ import {
   RotateCcw, BookOpen, Clock, Users, ArrowUpRight, Flame
 } from 'lucide-react';
 import WhatIfSimulator from './WhatIfSimulator';
+import ScoreProgressChart from './ScoreProgressChart';
 
-export default function Dashboard({ user, assessmentResult, baselineInput, onRetake }) {
+export default function Dashboard({ 
+  user, 
+  assessmentResult, 
+  baselineInput, 
+  onRetake,
+  assessmentHistory = [],
+  onOpenRetakeModal
+}) {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'what-if' | 'details'
   const [appliedNotification, setAppliedNotification] = useState('');
 
@@ -48,12 +56,12 @@ export default function Dashboard({ user, assessmentResult, baselineInput, onRet
             Halo, {user?.name || user?.email?.split('@')[0] || 'Siswa'}! 👋
           </h1>
           <p className="text-slate-600 dark:text-slate-300 text-sm max-w-2xl">
-            Berikut adalah hasil analisis model kecerdasan buatan terhadap kebiasaan dan kesiapan belajarmu berdasarkan 19 variabel input.
+            Berikut adalah hasil analisis cerdas terhadap kebiasaan dan kesiapan belajarmu.
           </p>
         </div>
 
         <button
-          onClick={onRetake}
+          onClick={onOpenRetakeModal || onRetake}
           className="self-start md:self-auto px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center gap-2 transition-all active:scale-95 shadow-sm"
         >
           <RotateCcw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
@@ -108,7 +116,7 @@ export default function Dashboard({ user, assessmentResult, baselineInput, onRet
           }`}
         >
           <BookOpen className="w-4 h-4" />
-          <span>Detail 19 Variabel</span>
+          <span>Rincian Profil Belajar</span>
         </button>
       </div>
 
@@ -128,7 +136,7 @@ export default function Dashboard({ user, assessmentResult, baselineInput, onRet
                   </span>
                   <span className="text-[11px] font-semibold text-emerald-300 px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    {assessmentResult.modelEngine || 'Model AI Capstone'}
+                    Analisis Terverifikasi
                   </span>
                 </div>
                 <h3 className="text-lg font-bold text-white mt-3">Prediksi Skor Kinerja Belajar</h3>
@@ -223,16 +231,19 @@ export default function Dashboard({ user, assessmentResult, baselineInput, onRet
             </div>
           </div>
 
+          {/* Grafik Progres Skor Asesmen Berdasarkan Tanggal */}
+          <ScoreProgressChart history={assessmentHistory} />
+
           {/* 3 REKOMENDASI VARIABEL PRIORITAS */}
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 className="text-xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-2">
                   <Flame className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                  <span>3 Rekomendasi Variabel yang Harus Ditingkatkan</span>
+                  <span>3 Rekomendasi Utama untuk Ditingkatkan</span>
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                  Sistem AI mendeteksi 3 variabel ini memiliki potensi kenaikan skor terbesar jika diperbaiki:
+                  Sistem mendeteksi 3 faktor ini memiliki potensi peningkatan nilai terbesar jika kamu optimalkan:
                 </p>
               </div>
 
@@ -295,7 +306,7 @@ export default function Dashboard({ user, assessmentResult, baselineInput, onRet
                       className="w-full py-2 px-3 rounded-lg bg-indigo-50 dark:bg-indigo-950/70 hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-700 dark:text-indigo-300 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Sliders className="w-3.5 h-3.5" />
-                      <span>Simulasikan Variabel Ini</span>
+                      <span>Simulasikan Faktor Ini</span>
                     </button>
                   </div>
                 ))
@@ -313,18 +324,19 @@ export default function Dashboard({ user, assessmentResult, baselineInput, onRet
           baselineInput={baselineInput}
           baselineResult={assessmentResult}
           onApplyTarget={handleApplyTarget}
+          onOpenRetakeModal={onOpenRetakeModal || onRetake}
         />
       )}
 
-      {/* TAB 3: DETAILS OF 19 VARIABLES */}
+      {/* TAB 3: DETAILS OF PROFILE */}
       {activeTab === 'details' && (
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6 animate-in fade-in duration-200">
           <div>
             <h3 className="font-display font-bold text-xl text-slate-900 dark:text-white">
-              Rincian Jawaban 19 Variabel Asesmen Anda
+              Rincian Profil Kebiasaan Belajar Anda
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Data input yang dimasukkan ke model prediksi untuk menghitung variabel dependen kinerja belajar:
+              Ringkasan data kebiasaan, kehadiran, dan lingkungan belajar harian Anda:
             </p>
           </div>
 
