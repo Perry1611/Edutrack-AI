@@ -12,13 +12,6 @@ try:
 except ImportError:
     pass
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Atau ganti dengan domain frontend saat production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Configure Google Gemini API Key
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -26,6 +19,13 @@ client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 app = FastAPI(title="Exam Score Predictor AI")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Atau ganti dengan domain frontend saat production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Load inference components
 # Set environment variable USE_VERTEX=true to enable Vertex AI inference
 use_vertex = bool(os.getenv("VERTEX_ENDPOINT_ID"))
