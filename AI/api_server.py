@@ -4,12 +4,21 @@ from pydantic import BaseModel
 import uvicorn
 from src.inference.predict import load_inference_components, preprocess_input, predict
 from google import genai
+from fastapi.middleware.cors import CORSMiddleware
 
 try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
     pass
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Atau ganti dengan domain frontend saat production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Configure Google Gemini API Key
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -74,6 +83,16 @@ def generate_recommendations(model, preprocessor, baseline_input, baseline_score
     recommendations = []
 
     scenarios = []
+
+    # 0. Attendance (Faktor terkuat berdasarkan hasil EDA)
+    curr_att = baseline_input.get("Attendance", 0)
+    if curr_att < 95:
+        target_att = min(100, curr_att + 10)
+        scenarios.append({
+            "field": "Attendance",
+            "val": target_att,
+            "desc": f"Meningkatkan tingkat kehadiran kelas dari {curr_att}% menjadi {target_att}%"
+        })
 
     # 1. Study Hours
     curr_hours = baseline_input.get("Hours_Studied", 0)
@@ -226,7 +245,7 @@ def recommend(request: PredictionRequest):
             """
             
             response = client.models.generate_content(
-                model="gemini-1.5-flash",
+                model="gemini-2.5-flash",
                 contents=prompt
             )
             generative_explanation = response.text.strip()
@@ -293,6 +312,14 @@ def chat_advisor(request: ChatRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+def run_inference(input_dict: dict) -> float:
+    if use_vertex:
+        score = vertex_predict(endpoint_resource, [input_dict])[0]
+    else:
+        processed = preprocess_input(input_dict, preprocessor)
+        score = predict(model, processed)
+    return float(max(0.0, min(100.0, score)))
+    
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8000))
