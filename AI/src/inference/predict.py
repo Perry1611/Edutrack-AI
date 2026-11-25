@@ -1,7 +1,14 @@
 import tensorflow as tf
 import pandas as pd
 import joblib
+import sklearn.compose._column_transformer as ct
 
+# Workaround for unpickling ColumnTransformer saved in scikit-learn <= 1.6.1
+if not hasattr(ct, "_RemainderColsList"):
+    class _RemainderColsList(list):
+        pass
+    ct._RemainderColsList = _RemainderColsList
+    
 def load_inference_components(model_path="saved_model/model.keras", preprocessor_path="saved_model/preprocessor.pkl"):
     # Load pre-trained model and scikit-learn preprocessor.
     model = tf.keras.models.load_model(model_path, compile=False)
